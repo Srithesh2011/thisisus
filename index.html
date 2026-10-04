@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>loveee</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff9d6;--card:#fffdf0e6;--ink:#5b4a1f;--accent:#e8a300;--soft:#ffeaa0;--line:#f3d97a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#3a3315;--card:#4a421fe6;--ink:#fff3c4;--soft:#6b5d20;--line:#8a7628}}
+:root[data-theme="dark"]{--bg:#3a3315;--card:#4a421fe6;--ink:#fff3c4;--soft:#6b5d20;--line:#8a7628}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;font-family:Quicksand,system-ui,sans-serif;color:var(--ink);background-color:var(--bg);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cg opacity='.55'%3E%3Cpath d='M40 120v70' stroke='%238bc34a' stroke-width='4'/%3E%3Cpath d='M28 100q12-34 12-34t12 34q-12 14-24 0z' fill='%23ffd23f'/%3E%3Cpath d='M28 100q4-26 12-34 8 8 12 34' fill='%23ffb703'/%3E%3Cpath d='M40 160q-18-6-20-24 16 4 20 24z' fill='%23a5d66b'/%3E%3Cg transform='translate(150 60)'%3E%3Ccircle r='6' fill='%23e8a300'/%3E%3Cg fill='%23fff'%3E%3Ccircle cy='-12' r='8'/%3E%3Ccircle cy='12' r='8'/%3E%3Ccircle cx='-12' r='8'/%3E%3Ccircle cx='12' r='8'/%3E%3C/g%3E%3Ccircle r='6' fill='%23e8a300'/%3E%3C/g%3E%3Cpath d='M150 190v-40' stroke='%238bc34a' stroke-width='4'/%3E%3Cpath d='M138 140q12-30 12-30t12 30q-12 12-24 0z' fill='%23ff9db8'/%3E%3C/g%3E%3C/svg%3E");margin:0}
+.wrap{max-width:980px;margin:0 auto;padding:20px 14px 60px}
+h1,h2{font-family:'Playfair Display',Georgia,serif;margin:.2em 0}
+header{text-align:center;padding:28px 10px}
+header h1{font-size:clamp(2rem,7vw,3.4rem)}
+.card{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:18px;margin:16px 0;box-shadow:0 6px 20px #e8a30022;backdrop-filter:blur(3px)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.row{grid-template-columns:1fr}}
+input,button,select{font:inherit;border-radius:14px;border:2px solid var(--line);padding:10px 12px;background:#fffef5;color:#5b4a1f;max-width:100%}
+button{background:var(--accent);color:#fff;border:none;font-weight:600;cursor:pointer}
+button:hover{filter:brightness(1.08)}
+.in{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.in input{flex:1;min-width:130px}
+.big{font-size:clamp(1.6rem,6vw,2.4rem);font-weight:600;color:var(--accent);text-align:center;margin:10px 0}
+.cd{display:flex;gap:8px;justify-content:center;text-align:center}
+.cd div{background:var(--soft);border-radius:14px;padding:8px 10px;min-width:62px}
+.cd b{display:block;font-size:1.6rem}
+ul{list-style:none;padding:0;margin:8px 0}
+li{display:flex;align-items:center;gap:8px;background:var(--soft);border-radius:12px;padding:8px 10px;margin:6px 0;word-break:break-word}
+li span{flex:1}li.done span{text-decoration:line-through;opacity:.6}
+li button{background:none;color:inherit;padding:2px 6px}
+.note{font-size:.85rem;opacity:.75}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:340px;margin:10px auto}
+.tile{aspect-ratio:1;font-size:1.8rem;display:flex;align-items:center;justify-content:center;background:var(--soft);border-radius:12px;cursor:pointer;user-select:none}
+.tile.open{background:#fff}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.who{font-size:.75rem;opacity:.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><h1>loveee</h1><div>Miles apart, always in bloom.</div><div class="note" id="status"></div></header>
+
+<section class="card">
+<h2>Distance &amp; Countdown</h2>
+<div class="row">
+<div>
+<div class="in"><input id="c1" list="cl" placeholder="Your country"><input id="c2" list="cl" placeholder="Her country"></div>
+<datalist id="cl"></datalist>
+<button id="calc">Measure our distance 💛</button>
+<div class="big" id="dist">— km</div>
+<div class="note" id="dnote">Straight-line distance between country centres.</div>
+</div>
+<div>
+<div class="in"><input type="date" id="meet"><button id="setd">Set meeting day</button></div>
+<div class="cd" id="cd"><div><b>--</b>days</div><div><b>--</b>hrs</div><div><b>--</b>min</div><div><b>--</b>sec</div></div>
+<div class="note" id="cdn" style="text-align:center;margin-top:8px">Pick the day we meet 🥰</div>
+</div>
+</div>
+</section>
+
+<div class="row">
+<section class="card"><h2>🌼 Future Goals Together</h2>
+<div class="in"><input id="gi" placeholder="A goal for us…"><button data-add="goals" data-in="gi">Add</button></div><ul id="goals"></ul></section>
+<section class="card"><h2>🌸 Dream Dates</h2>
+<div class="in"><input id="di" placeholder="A date we'll have…"><button data-add="dates" data-in="di">Add</button></div><ul id="dates"></ul></section>
+</div>
+
+<section class="card"><h2>💌 Our Wall</h2>
+<div class="in"><select id="who"><option>Me</option><option>Her</option></select><input id="wi" placeholder="Leave a note…"><button data-add="wall" data-in="wi">Post</button></div>
+<ul id="wall"></ul></section>
+
+</div>
+
+<script>
+// ====== PASTE YOUR FIREBASE KEYS HERE (see setup steps) ======
+const FIREBASE_CONFIG={apiKey:"PASTE_HERE",authDomain:"PASTE_HERE",projectId:"PASTE_HERE",storageBucket:"PASTE_HERE",messagingSenderId:"PASTE_HERE",appId:"PASTE_HERE"};
+// ==============================================================
+const COUNTRIES={"India":[20.6,78.9],"United States":[39.8,-98.6],"United Kingdom":[54,-2],"Canada":[56.1,-106.3],"Australia":[-25.3,133.8],"Germany":[51.2,10.5],"France":[46.2,2.2],"Italy":[41.9,12.6],"Spain":[40.5,-3.7],"Netherlands":[52.1,5.3],"Ireland":[53.4,-8.2],"Switzerland":[46.8,8.2],"Sweden":[60.1,18.6],"Norway":[60.5,8.5],"Denmark":[56.3,9.5],"Finland":[61.9,25.7],"Portugal":[39.4,-8.2],"Poland":[51.9,19.1],"Russia":[61.5,105.3],"Turkey":[38.9,35.2],"UAE":[23.4,53.8],"Saudi Arabia":[23.9,45.1],"Qatar":[25.4,51.2],"Pakistan":[30.4,69.3],"Bangladesh":[23.7,90.4],"Sri Lanka":[7.9,80.8],"Nepal":[28.4,84.1],"China":[35.9,104.2],"Japan":[36.2,138.3],"South Korea":[35.9,127.8],"Singapore":[1.35,103.8],"Hong Kong":[22.32,114.17],"Malaysia":[4.2,102],"Indonesia":[-0.8,113.9],"Thailand":[15.9,100.99],"Philippines":[12.9,121.8],"Vietnam":[14.1,108.3],"New Zealand":[-40.9,174.9],"South Africa":[-30.6,22.9],"Nigeria":[9.1,8.7],"Kenya":[0.02,37.9],"Egypt":[26.8,30.8],"Brazil":[-14.2,-51.9],"Argentina":[-38.4,-63.6],"Mexico":[23.6,-102.6]};
+const $=id=>document.getElementById(id);
+$("cl").innerHTML=Object.keys(COUNTRIES).map(c=>`<option value="${c}">`).join("");
+const find=n=>Object.keys(COUNTRIES).find(k=>k.toLowerCase()===n.trim().toLowerCase());
+function hav(a,b){const R=6371,r=x=>x*Math.PI/180,dl=r(b[0]-a[0]),dn=r(b[1]-a[1]);const h=Math.sin(dl/2)**2+Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+function showDist(a,b){const A=find(a||""),B=find(b||"");if(!A||!B){$("dist").textContent="— km";$("dnote").textContent="Pick countries from the list 🌍";return}
+$("dist").textContent=Math.round(hav(COUNTRIES[A],COUNTRIES[B])).toLocaleString()+" km";$("dnote").textContent=A+" ↔ "+B+" · straight-line, between country centres"}
+let meta={},db=null,mem={goals:[],dates:[],wall:[]};
+function showCd(){const v=meta.meet;if(!v){return}const t=new Date(v+"T00:00:00")-new Date();
+if(t<=0){$("cd").innerHTML="<div style='min-width:0'><b>🎉</b></div>";$("cdn").textContent="Today's the day, or it's already happened! 💛";return}
+const s=Math.floor(t/1e3),p=[Math.floor(s/86400),Math.floor(s%86400/3600),Math.floor(s%3600/60),s%60],l=["days","hrs","min","sec"];
+$("cd").innerHTML=p.map((x,i)=>`<div><b>${x}</b>${l[i]}</div>`).join("");$("cdn").textContent="Until we're together 🥰"}
+setInterval(showCd,1000);
+function esc(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML}
+function render(name,items){const ul=$(name);ul.innerHTML="";items.forEach(it=>{const li=document.createElement("li");if(it.done)li.className="done";
+let h="";if(name!=="wall")h+=`<input type="checkbox" ${it.done?"checked":""}>`;
+h+=`<span>${esc(it.text)}${name==="wall"?` <i class="who">— ${esc(it.who||"")}</i>`:""}</span>`+`<button title="Edit">✏️</button><button title="Delete">🗑️</button>`;li.innerHTML=h;
+const cb=li.querySelector("input"),[ed,del]=li.querySelectorAll("button");
+if(cb)cb.onchange=()=>save(name,it.id,{done:cb.checked});
+if(ed)ed.onclick=()=>{const sp=li.querySelector("span");const inp=document.createElement("input");inp.value=it.text;inp.style.flex="1";sp.replaceWith(inp);inp.focus();ed.textContent="💾";ed.onclick=()=>{const t=inp.value.trim().slice(0,300);if(t)save(name,it.id,{text:t});else render(name,items)}};
+if(del)del.onclick=()=>{if(del.dataset.sure){remove(name,it.id);return}del.dataset.sure="1";del.textContent="Sure? 🗑️";setTimeout(()=>{del.dataset.sure="";del.textContent="🗑️"},3000)};ul.appendChild(li)})}
+async function save(name,id,patch){try{if(db)await db.collection(name).doc(id).update(patch);else{const x=mem[name].find(i=>i.id===id);Object.assign(x,patch);render(name,mem[name]);persist()}}catch(e){$("status").textContent="Couldn't save — you may need edit access to this page."}}
+async function remove(name,id){try{if(db)await db.collection(name).doc(id).delete();else{mem[name]=mem[name].filter(i=>i.id!==id);render(name,mem[name]);persist()}}catch(e){$("status").textContent="Couldn't delete: "+(e&&e.code||"error")+""}}
+async function add(name,text){text=text.trim().slice(0,300);if(!text)return;const o={text,done:false,t:Date.now()};if(name==="wall")o.who=$("who").value;
+try{if(db)await db.collection(name).add(o);else{o.id="m"+o.t;mem[name].push(o);render(name,mem[name]);persist()}}catch(e){$("status").textContent="Couldn't save — you may need edit access to this page."}}
+document.querySelectorAll("[data-add]").forEach(b=>b.onclick=async()=>{const i=$(b.dataset.in);await add(b.dataset.add,i.value);i.value=""});
+async function saveMeta(p){Object.assign(meta,p);try{localStorage.setItem("meta",JSON.stringify(meta))}catch(e){}
+try{if(db)await db.doc("config/main").set({...meta})}catch(e){$("status").textContent="Saved on this device only ("+(e&&e.code||"error")+") — you may need edit access to share it."}}
+$("calc").onclick=()=>{showDist($("c1").value,$("c2").value);saveMeta({c1:$("c1").value,c2:$("c2").value})};
+$("setd").onclick=()=>{const v=$("meet").value;if(!v){$("cdn").textContent="Pick a date first 📅";return}meta.meet=v;showCd();saveMeta({meet:v})};
+try{const m=JSON.parse(localStorage.getItem("meta")||"{}");meta=m;$("c1").value=m.c1||"";$("c2").value=m.c2||"";if(m.meet)$("meet").value=m.meet;showDist(m.c1,m.c2);showCd()}catch(e){}
+function persist(){try{localStorage.setItem("mem",JSON.stringify(mem))}catch(e){}}
+(function(){
+try{if(FIREBASE_CONFIG.apiKey&&FIREBASE_CONFIG.apiKey.indexOf("PASTE")<0&&window.firebase){firebase.initializeApp(FIREBASE_CONFIG);db=firebase.firestore()}}catch(e){db=null}
+if(!db){$("status").textContent="Saving on this device only. Add your Firebase keys (see top of the script) to share between you two.";
+try{mem=Object.assign(mem,JSON.parse(localStorage.getItem("mem")||"{}"))}catch(e){}
+["goals","dates","wall"].forEach(n=>render(n,mem[n]));return}
+$("status").textContent="💛 Shared — you both see the same page";
+const data=d=>typeof d.data==="function"?d.data():d.data;
+["goals","dates","wall"].forEach(n=>db.collection(n).orderBy("t").onSnapshot(s=>render(n,s.docs.map(d=>({...data(d),id:d.id}))),()=>$("status").textContent="Couldn't load shared notes."));
+db.doc("config/main").onSnapshot(d=>{const x=data(d)||{};meta={...meta,...x};$("c1").value=meta.c1||"";$("c2").value=meta.c2||"";if(meta.meet)$("meet").value=meta.meet;showDist(meta.c1,meta.c2);showCd()})})();
+</script>
+</body>
+</html>
